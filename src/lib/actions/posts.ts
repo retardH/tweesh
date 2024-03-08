@@ -3,11 +3,18 @@ import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { desc } from 'drizzle-orm';
 import db from '../db';
 import { posts } from '../db/schema';
-import { NewPost, Post } from '../type-definitions';
+import { PostWithUser } from '../type-definitions';
 import { filterUserDataForClient } from '../utils';
+import { z } from 'zod';
+import toast from 'react-hot-toast';
+import { revalidatePath } from 'next/cache';
 
-export const addUserDataToPosts = async (postsData: Post[]) => {
-  const userIds = postsData.map((post) => post.userId);
+const CreatePostFormSchema = z.object({
+  content: z.string().emoji('Only emojis are allowed!'),
+});
+
+export const addUserDataToPosts = async (postsData: PostWithUser[]) => {
+  const userIds = postsData.map((post) => post.authorId);
   const users = (
     await clerkClient.users.getUserList({
       userId: userIds,
@@ -16,7 +23,7 @@ export const addUserDataToPosts = async (postsData: Post[]) => {
   ).map(filterUserDataForClient);
 
   return postsData.map((post) => {
-    const author = users.find((user) => user.id === post.userId);
+    const author = users.find((user) => user.id === post.authorId);
 
     if (!author) {
       console.error('Author not found ', post);
@@ -42,12 +49,26 @@ export const addUserDataToPosts = async (postsData: Post[]) => {
   });
 };
 
-export const createNewPost = async (newPost: Omit<NewPost, 'userId'>) => {
+export const createNewPost = async (prevState: any, formData: FormData) => {
+  const result = CreatePostFormSchema.safeParse({
+    content: formData.get('content'),
+  });
+
+  if (!result.success) {
+    console.log(result.error.flatten().fieldErrors.content?.[0]);
+    return {
+      status: 'error',
+      message: result.error.flatten().fieldErrors.content?.[0],
+    };
+  }
+
   const user = await currentUser();
   if (!user) {
     throw new Error('You are not logged in!');
   }
-  await db.insert(posts).values({ ...newPost, userId: user.id });
+
+  await db.insert(posts).values({ ...result.data, authorId: user.id });
+  revalidatePath('/');
 };
 
 export const getPosts = async () => {
@@ -56,6 +77,5 @@ export const getPosts = async () => {
 };
 
 export const deletePosts = async () => {
-  console.log('deleting');
   await db.delete(posts);
 };
