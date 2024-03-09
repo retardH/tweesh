@@ -1,13 +1,12 @@
 'use server';
+import React from 'react';
 import PostView from '@/components/shared/post-view';
 import { getPosts } from '@/lib/actions/posts';
-import React from 'react';
 
 const Feed = async () => {
   const data = await getPosts();
-
   return (
-    <div className="relative flex grow flex-col overflow-y-hidden">
+    <div className="flex grow flex-col overflow-y-scroll">
       {data?.map((fullPost) => {
         return <PostView key={fullPost.post.id} {...fullPost} />;
       })}

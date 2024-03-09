@@ -6,8 +6,7 @@ import { posts } from '../db/schema';
 import { PostWithUser } from '../type-definitions';
 import { filterUserDataForClient } from '../utils';
 import { z } from 'zod';
-import toast from 'react-hot-toast';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 const CreatePostFormSchema = z.object({
   content: z.string().emoji('Only emojis are allowed!'),
@@ -32,8 +31,8 @@ export const addUserDataToPosts = async (postsData: PostWithUser[]) => {
 
     if (!author.username) {
       if (!author.externalUsername) {
-        console.error('Author has no Github Account!');
-        throw new Error('Author has no Github account!');
+        console.error('Author has no Connected Account!');
+        throw new Error('Author has no Connected account!');
       }
 
       author.username = author.externalUsername;
@@ -63,6 +62,7 @@ export const createNewPost = async (prevState: any, formData: FormData) => {
   }
 
   const user = await currentUser();
+
   if (!user) {
     throw new Error('You are not logged in!');
   }
@@ -72,6 +72,7 @@ export const createNewPost = async (prevState: any, formData: FormData) => {
 };
 
 export const getPosts = async () => {
+  noStore();
   const results = await db.select().from(posts).orderBy(desc(posts.createdAt));
   return addUserDataToPosts(results);
 };
