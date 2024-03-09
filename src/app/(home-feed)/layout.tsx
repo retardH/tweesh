@@ -1,3 +1,4 @@
+import { LoadingPage } from '@/components/shared/loading';
 import { ClerkLoaded, ClerkLoading } from '@clerk/nextjs';
 import { PropsWithChildren } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -6,7 +7,7 @@ export default function HomeFeedLayout({ children }: PropsWithChildren) {
   return (
     <div className="mx-auto min-h-[100dvh] max-w-xl">
       <ClerkLoading>
-        <div />
+        <LoadingPage />
       </ClerkLoading>
       <ClerkLoaded>
         {children}
