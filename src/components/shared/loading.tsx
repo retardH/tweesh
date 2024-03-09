@@ -7,3 +7,11 @@ export const FeedLoading = () => {
     </div>
   );
 };
+
+export const LoadingPage = () => {
+  return (
+    <div className="absolute left-0 top-0 flex h-screen w-screen items-center justify-center">
+      <LoadingSpinner size={64} />
+    </div>
+  );
+};
