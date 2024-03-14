@@ -6,7 +6,7 @@ interface ProfileAvatarProps {
 }
 const ProfileAvatar = ({ image, name }: ProfileAvatarProps) => {
   return (
-    <Avatar className="cursor-pointer">
+    <Avatar className="size-12 cursor-pointer">
       <AvatarImage src={image} />
       <AvatarFallback>{name ?? 'HZ'}</AvatarFallback>
     </Avatar>

@@ -28,8 +28,8 @@ const AddPostForm = () => {
         appearance={{
           elements: {
             userButtonAvatarBox: {
-              width: 40,
-              height: 40,
+              width: 50,
+              height: 50,
             },
           },
         }}
@@ -49,9 +49,9 @@ const AddPostForm = () => {
           Post
         </Button>
       </form>
-      <div className="fixed right-2 top-2">
+      {/* <div className="fixed right-2 top-2">
         <ThemeToggle />
-      </div>
+      </div> */}
     </div>
   );
 };
