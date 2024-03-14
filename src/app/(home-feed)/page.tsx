@@ -8,7 +8,7 @@ import { NextPage } from 'next';
 const Home: NextPage = () => {
   return (
     <main className="flex h-[100dvh] flex-col overflow-hidden border-x border-gray-400/40 shadow-sm dark:border-gray-600/40">
-      <section className="flex flex-col border-b border-gray-400/40 px-4 py-6 dark:border-gray-600/40">
+      <section className="flex flex-col border-b border-gray-400/40 bg-gray-100 p-4 dark:border-gray-600/40 dark:bg-gray-900">
         <AddPostForm />
       </section>
       <Suspense fallback={<FeedLoading />}>

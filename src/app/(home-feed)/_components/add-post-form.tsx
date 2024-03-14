@@ -1,16 +1,13 @@
 'use client';
-import ThemeToggle from '@/components/shared/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { createNewPost } from '@/lib/actions/posts';
-import { UserButton, useUser } from '@clerk/nextjs';
+import { UserButton } from '@clerk/nextjs';
 import { useEffect, useRef } from 'react';
 import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
 
 const AddPostForm = () => {
-  const { user } = useUser();
-  console.log('current user', user);
   // @ts-ignore
   const [formState, formAction] = useFormState(createNewPost, {});
   const formRef = useRef<HTMLFormElement>(null);
