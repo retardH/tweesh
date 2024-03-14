@@ -2,6 +2,7 @@
 import ProfileAvatar from './profile-avatar';
 import { addUserDataToPosts } from '@/lib/actions/posts';
 import { formatDistance } from 'date-fns';
+import Link from 'next/link';
 
 type PostViewProps = Awaited<ReturnType<typeof addUserDataToPosts>>[0];
 
@@ -12,7 +13,10 @@ const PostView = (props: PostViewProps) => {
       <ProfileAvatar image={author.profileImageUrl} />
       <div className="flex flex-col gap-1">
         <div className="flex items-center">
-          <h4 className="cursor-pointer text-gray-700 dark:text-gray-300">{`@${author.username ?? author.externalUsername}`}</h4>
+          <Link
+            href={`/${author.id}`}
+            className="cursor-pointer text-gray-700 dark:text-gray-300"
+          >{`@${author.username ?? author.externalUsername}`}</Link>
           <span className="mx-1 font-semibold">·</span>
           <span className="text-gray-600 dark:text-gray-400">
             {formatDistance(Date.now(), post.createdAt!)} ago

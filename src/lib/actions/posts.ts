@@ -1,6 +1,6 @@
 'use server';
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
-import { desc } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import db from '../db';
 import { posts } from '../db/schema';
 import { PostWithUser } from '../type-definitions';
@@ -48,7 +48,7 @@ export const addUserDataToPosts = async (postsData: PostWithUser[]) => {
   });
 };
 
-export const createNewPost = async (prevState: any, formData: FormData) => {
+export const createNewPost = async (_, formData: FormData) => {
   const result = CreatePostFormSchema.safeParse({
     content: formData.get('content'),
   });
@@ -74,6 +74,18 @@ export const createNewPost = async (prevState: any, formData: FormData) => {
 export const getPosts = async () => {
   noStore();
   const results = await db.select().from(posts).orderBy(desc(posts.createdAt));
+  return addUserDataToPosts(results);
+};
+
+export const getPostsByUserId = async (id: string) => {
+  noStore();
+
+  const results = await db
+    .select()
+    .from(posts)
+    .where(eq(posts.authorId, id))
+    .orderBy(posts.createdAt);
+
   return addUserDataToPosts(results);
 };
 
