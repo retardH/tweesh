@@ -23,7 +23,7 @@ const PostView = (props: PostViewProps) => {
           </span>
         </div>
         <div>
-          <p className="text-xl">{post.content}</p>
+          <p className="text-2xl">{post.content}</p>
         </div>
       </div>
     </div>

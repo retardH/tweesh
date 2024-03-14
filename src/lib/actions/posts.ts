@@ -73,6 +73,11 @@ export const createNewPost = async (_, formData: FormData) => {
 
 export const getPosts = async () => {
   noStore();
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(2000);
+    }, 2000);
+  });
   const results = await db.select().from(posts).orderBy(desc(posts.createdAt));
   return addUserDataToPosts(results);
 };
